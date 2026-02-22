@@ -31,6 +31,12 @@ pipeline {
 
         stage('Deploy/Run Containers') {
             steps {
+                echo 'Creating required .env file for backend...'
+                bat 'echo PORT=5000 > backend\\.env'
+                bat 'echo MONGO_URI=mongodb://mongodb:27017/agenticDB >> backend\\.env'
+                bat 'echo JWT_SECRET=supersecretkey123 >> backend\\.env'
+                bat 'echo JWT_REFRESH_SECRET=supersecretrefresh >> backend\\.env'
+
                 echo 'Starting up containers in detached mode...'
                 bat "${COMPOSE_EXE} up -d"
             }
