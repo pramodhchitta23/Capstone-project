@@ -17,22 +17,22 @@ pipeline {
         stage('Verify Environment') {
             steps {
                 echo 'Verifying Docker and Docker Compose availability...'
-                sh 'docker --version'
-                sh '${COMPOSE_EXE} version'
+                bat 'docker --version'
+                bat "${COMPOSE_EXE} version"
             }
         }
 
         stage('Build Docker Images') {
             steps {
                 echo 'Building Docker images for Backend and Frontend...'
-                sh '${COMPOSE_EXE} build'
+                bat "${COMPOSE_EXE} build"
             }
         }
 
         stage('Deploy/Run Containers') {
             steps {
                 echo 'Starting up containers in detached mode...'
-                sh '${COMPOSE_EXE} up -d'
+                bat "${COMPOSE_EXE} up -d"
             }
         }
 
@@ -42,10 +42,10 @@ pipeline {
                 sleep 5
                 
                 echo 'Checking running containers...'
-                sh 'docker ps'
+                bat 'docker ps'
                 
                 echo 'Verifying frontend response...'
-                sh 'curl -f http://localhost:5173 || exit 1'
+                bat 'curl -f http://localhost:5173 || exit 1'
             }
         }
     }
@@ -53,7 +53,7 @@ pipeline {
     post {
         always {
             echo 'Pipeline finished. Tearing down services to free up port/resources (optional for actual CD, good for CI testing).'
-            // sh '${COMPOSE_EXE} down'
+            // bat "${COMPOSE_EXE} down"
         }
         success {
             echo 'All stages completed successfully. Application is healthy!'
